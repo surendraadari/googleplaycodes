@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake Google Play Code Generator</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .slot-machine {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 400px;
+            height: 100px;
+            background-color: #fff;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+        .slot {
+            width: 100px;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #generate-btn, #download-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        #download-btn {
+            background-color: #2196F3;
+        }
+        .images {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .images img {
+            width: 100px;
+            height: auto;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>GET FREE GOOGLE PLAY CODES</h1>
+    <div class="slot-machine">
+        <div id="slot1" class="slot">?</div>
+        <div id="slot2" class="slot">?</div>
+        <div id="slot3" class="slot">?</div>
+        <div id="slot4" class="slot">?</div>
+        <div id="slot5" class="slot">?</div>
+        <div id="slot6" class="slot">?</div>
+        <div id="slot7" class="slot">?</div>
+        <div id="slot8" class="slot">?</div>
+    </div>
+    <button id="generate-btn">Try Your Luck</button>
+    <button id="download-btn" style="display:none;">Download Full Code</button>
+    <div class="images">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Google_Play_2022_logo.svg" alt="Google Play">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/512px-Google_2015_logo.svg.png" alt="Google">
+    </div>
+
+    <script>
+        function generateRandomCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 16; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+                if ((i + 1) % 4 === 0 && i < 15) {
+                    code += '-';
+                }
+            }
+            return code;
+        }
+
+        function animateSlots(code) {
+            const slots = [
+                document.getElementById('slot1'), document.getElementById('slot2'), 
+                document.getElementById('slot3'), document.getElementById('slot4'),
+                document.getElementById('slot5'), document.getElementById('slot6'),
+                document.getElementById('slot7'), document.getElementById('slot8')
+            ];
+            slots.forEach((slot, index) => {
+                let position = 0;
+                const interval = setInterval(() => {
+                    slot.textContent = code.charAt(position);
+                    position = (position + 1) % code.length;
+                }, 100);
+                setTimeout(() => clearInterval(interval), 2000 + index * 500);
+            });
+        }
+
+        function downloadFile(content, fileName, contentType) {
+            const a = document.createElement('a');
+            const file = new Blob([content], { type: contentType });
+            a.href = URL.createObjectURL(file);
+            a.download = fileName;
+            a.click();
+        }
+
+        const generateBtn = document.getElementById('generate-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        let halfCode = '';
+
+        generateBtn.addEventListener('click', () => {
+            const fullCode = generateRandomCode();
+            halfCode = fullCode.slice(0, 9); // Includes 'xxxx-xxxx-'
+            animateSlots(halfCode);
+            setTimeout(() => {
+                generateBtn.style.display = 'none';
+                downloadBtn.style.display = 'block';
+            }, 3500);
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            const fullCode = halfCode + generateRandomCode().slice(9, 19); // Includes the rest of the code
+            const fileContent = `Full Google Play Code: ${fullCode}\n\nDownload your file from the link below:\n`;
+            const fileLink = 'https://easyupload.io/m/h3rf7m';
+            const finalContent = `${fileContent}${fileLink}`;
+            downloadFile(finalContent, 'full_googleplay_code.txt', 'text/plain');
+        });
+    </script>
+</body>
+</html>
